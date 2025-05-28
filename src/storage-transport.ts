@@ -29,7 +29,6 @@ import {
 import {randomUUID} from 'crypto';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import {getPackageJSON} from './package-json-helper.cjs';
 import {GCCL_GCS_CMD_KEY} from './nodejs-common/util';
 import {RetryOptions} from './storage';
 
@@ -65,7 +64,6 @@ interface TransportParameters extends Omit<GoogleAuthOptions, 'authClient'> {
   baseUrl: string;
   customEndpoint?: boolean;
   email?: string;
-  packageJson: PackageJson;
   retryOptions: RetryOptions;
   scopes: string | string[];
   timeout?: number;
@@ -73,11 +71,6 @@ interface TransportParameters extends Omit<GoogleAuthOptions, 'authClient'> {
   useAuthWithCustomEndpoint?: boolean;
   userAgent?: string;
   gaxiosInstance?: Gaxios;
-}
-
-interface PackageJson {
-  name: string;
-  version: string;
 }
 
 export interface StorageTransportCallback<T> {
@@ -92,7 +85,6 @@ let projectId: string;
 export class StorageTransport {
   authClient: GoogleAuth<AuthClient>;
   private providedUserAgent?: string;
-  private packageJson: PackageJson;
   private retryOptions: RetryOptions;
   private baseUrl: string;
   private timeout?: number;
@@ -112,7 +104,6 @@ export class StorageTransport {
       });
     }
     this.providedUserAgent = options.userAgent;
-    this.packageJson = getPackageJSON();
     this.retryOptions = options.retryOptions;
     this.baseUrl = options.baseUrl;
     this.timeout = options.timeout;
@@ -128,7 +119,9 @@ export class StorageTransport {
     if (reqOpts[GCCL_GCS_CMD_KEY]) {
       headers.set(
         'x-goog-api-client',
-        `${headers.get('x-goog-api-client')} gccl-gcs-cmd/${reqOpts[GCCL_GCS_CMD_KEY]}`,
+        `${headers.get('x-goog-api-client')} gccl-gcs-cmd/${
+          reqOpts[GCCL_GCS_CMD_KEY]
+        }`,
       );
     }
     if (reqOpts.interceptors) {
@@ -210,7 +203,7 @@ export class StorageTransport {
     headers.set('User-Agent', this.#getUserAgentString());
     headers.set(
       'x-goog-api-client',
-      `${getRuntimeTrackingString()} gccl/${this.packageJson.version}-${getModuleFormat()} gccl-invocation-id/${randomUUID()}`,
+      `${getRuntimeTrackingString()} gccl/7.16.0-${getModuleFormat()} gccl-invocation-id/${randomUUID()}`,
     );
 
     return headers;

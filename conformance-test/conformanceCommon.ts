@@ -99,7 +99,6 @@ export function executeScenario(testCase: RetryTestCase) {
               apiEndpoint: TESTBENCH_HOST,
               authClient: undefined,
               baseUrl: TESTBENCH_HOST,
-              packageJson: {name: 'test-package', version: '1.0.0'},
               retryOptions: {
                 retryDelayMultiplier: RETRY_MULTIPLIER_FOR_CONFORMANCE_TESTS,
                 maxRetries: 3,

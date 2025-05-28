@@ -49,7 +49,6 @@ describe('Storage Transport', () => {
         retryableErrorFn: () => true,
       },
       scopes: ['https://www.googleapis.com/auth/could-platform'],
-      packageJson: {name: 'test-package', version: '1.0.0'},
     });
   });
 
@@ -157,7 +156,6 @@ describe('Storage Transport', () => {
         retryableErrorFn: () => true,
       },
       scopes: ['https://www.googleapis.com/auth/could-platform'],
-      packageJson: {name: 'test-package', version: '1.0.0'},
       clientOptions: {keyFile: 'path/to/key.json'},
       userAgent: 'custom-agent',
       url: 'http://example..com',
