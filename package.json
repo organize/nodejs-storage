@@ -1,5 +1,5 @@
 {
-  "name": "@google-cloud/storage",
+  "name": "@agileagileagile/nodejs-storage",
   "description": "Cloud Storage Client Library for Node.js",
   "version": "7.16.0",
   "license": "Apache-2.0",
@@ -7,7 +7,7 @@
   "engines": {
     "node": ">=18"
   },
-  "repository": "googleapis/nodejs-storage",
+  "repository": "https://github.com/organize/nodejs-storage.git",
   "main": "./build/cjs/src/index.js",
   "types": "./build/cjs/src/index.d.ts",
   "type": "module",
