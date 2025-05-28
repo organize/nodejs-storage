@@ -293,21 +293,36 @@ class ServiceObject<T, K extends BaseMetadata> extends EventEmitter {
       (typeof this.methods.delete === 'object' && this.methods.delete) || {};
 
     let url = `${this.baseUrl}/${this.id}`;
+    if (url[0] !== '/') {
+      url = `/${url}`;
+    }
     if (this.parent instanceof Bucket) {
-      url = `${this.parent.baseUrl}/${this.parent.id}/${url}`;
+      url = `${this.parent.baseUrl}/${this.parent.id}${url}`;
     }
 
     this.storageTransport
-      .makeRequest({
-        method: 'DELETE',
-        responseType: 'json',
-        url,
-        ...methodConfig.reqOpts,
-        queryParameters: {
-          ...methodConfig.reqOpts?.queryParameters,
-          ...options,
+      .makeRequest(
+        {
+          method: 'DELETE',
+          responseType: 'json',
+          url,
+          ...methodConfig.reqOpts,
+          queryParameters: {
+            ...methodConfig.reqOpts?.queryParameters,
+            ...options,
+          },
         },
-      })
+        (err, _data, respo) => {
+          let resp: GaxiosResponse | undefined = respo;
+          if (err) {
+            if (err.status === 404 && ignoreNotFound) {
+              err = null;
+              resp = undefined;
+            }
+          }
+          callback!(err, resp);
+        },
+      )
       .catch(({err, resp}) => {
         if (err) {
           if (err.status === 404 && ignoreNotFound) {

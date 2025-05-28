@@ -213,7 +213,7 @@ describe('ServiceObject', () => {
         .stub()
         .callsFake(reqOpts => {
           assert.strictEqual(reqOpts.method, 'DELETE');
-          assert.strictEqual(reqOpts.url, 'base-url/id');
+          assert.strictEqual(reqOpts.url, '/base-url/id');
           done();
           return Promise.resolve();
         });

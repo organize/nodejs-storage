@@ -156,7 +156,7 @@ describe('File', () => {
           .stub()
           .callsFake(reqOpts => {
             assert.strictEqual(reqOpts.method, 'DELETE');
-            assert.strictEqual(reqOpts.url, '/b/bucket-name//o/file-name.png');
+            assert.strictEqual(reqOpts.url, '/b/bucket-name/o/file-name.png');
             assert.deepStrictEqual(
               reqOpts.queryParameters.generation,
               options.generation,
@@ -448,9 +448,9 @@ describe('File', () => {
     it('should URI encode file names', done => {
       const newFile = new File(BUCKET, 'nested/file.jpg');
 
-      const expectedPath = `/b/${BUCKET.name}/o/${encodeURIComponent(directoryFile.name)}/rewriteTo/b/${
-        file.bucket.name
-      }/o/${encodeURIComponent(newFile.name)}`;
+      const expectedPath = `/b/${BUCKET.name}/o/${encodeURIComponent(
+        directoryFile.name,
+      )}/rewriteTo/b/${file.bucket.name}/o/${encodeURIComponent(newFile.name)}`;
 
       directoryFile.storageTransport.makeRequest = sandbox
         .stub()
@@ -685,7 +685,9 @@ describe('File', () => {
       it('should allow a string', done => {
         const newFileName = 'new-file-name.png';
         const newFile = new File(BUCKET, newFileName);
-        const expectedPath = `/b/${BUCKET.name}/o/${encodeURIComponent(file.name)}/rewriteTo/b/${file.bucket.name}/o/${newFile.name}`;
+        const expectedPath = `/b/${BUCKET.name}/o/${encodeURIComponent(
+          file.name,
+        )}/rewriteTo/b/${file.bucket.name}/o/${newFile.name}`;
         assertPathEquals(file, expectedPath, done);
         file.copy(newFileName, done);
       });
@@ -694,9 +696,11 @@ describe('File', () => {
         const newFileName = '/new-file-name.png';
         const newFile = new File(BUCKET, newFileName);
         // File uri encodes file name when calling this.request during copy
-        const expectedPath = `/b/${BUCKET.name}/o/${encodeURIComponent(file.name)}/rewriteTo/b/${
-          file.bucket.name
-        }/o/${encodeURIComponent(newFile.name)}`;
+        const expectedPath = `/b/${BUCKET.name}/o/${encodeURIComponent(
+          file.name,
+        )}/rewriteTo/b/${file.bucket.name}/o/${encodeURIComponent(
+          newFile.name,
+        )}`;
         assertPathEquals(file, expectedPath, done);
         file.copy(newFileName, done);
       });
@@ -3577,7 +3581,9 @@ describe('File', () => {
       const file = new File(BUCKET, NAME);
       assert.strictEqual(
         file.publicUrl(),
-        `https://storage.googleapis.com/bucket-name/${encodeURIComponent(NAME)}`,
+        `https://storage.googleapis.com/bucket-name/${encodeURIComponent(
+          NAME,
+        )}`,
       );
       done();
     });
@@ -3587,7 +3593,9 @@ describe('File', () => {
       const file = new File(BUCKET, NAME);
       assert.strictEqual(
         file.publicUrl(),
-        `https://storage.googleapis.com/bucket-name/${encodeURIComponent(NAME)}`,
+        `https://storage.googleapis.com/bucket-name/${encodeURIComponent(
+          NAME,
+        )}`,
       );
       done();
     });
@@ -3597,7 +3605,9 @@ describe('File', () => {
       const file = new File(BUCKET, NAME);
       assert.strictEqual(
         file.publicUrl(),
-        `https://storage.googleapis.com/bucket-name/${encodeURIComponent(NAME)}`,
+        `https://storage.googleapis.com/bucket-name/${encodeURIComponent(
+          NAME,
+        )}`,
       );
       done();
     });
@@ -3607,7 +3617,9 @@ describe('File', () => {
       const file = new File(BUCKET, NAME);
       assert.strictEqual(
         file.publicUrl(),
-        `https://storage.googleapis.com/bucket-name/${encodeURIComponent(NAME)}`,
+        `https://storage.googleapis.com/bucket-name/${encodeURIComponent(
+          NAME,
+        )}`,
       );
       done();
     });
@@ -3617,7 +3629,9 @@ describe('File', () => {
       const file = new File(BUCKET, NAME);
       assert.strictEqual(
         file.publicUrl(),
-        `https://storage.googleapis.com/bucket-name/${encodeURIComponent(NAME)}`,
+        `https://storage.googleapis.com/bucket-name/${encodeURIComponent(
+          NAME,
+        )}`,
       );
       done();
     });
@@ -3730,7 +3744,9 @@ describe('File', () => {
     it('should URI encode file names', async () => {
       const newFile = new File(BUCKET, 'nested/file.jpg');
 
-      const expectedPath = `/b/${BUCKET.id}/o/${directoryFile.id}/moveTo/o/${encodeURIComponent(newFile.name)}`;
+      const expectedPath = `/b/${BUCKET.id}/o/${
+        directoryFile.id
+      }/moveTo/o/${encodeURIComponent(newFile.name)}`;
 
       directoryFile.storageTransport.makeRequest = sandbox
         .stub()
@@ -3841,7 +3857,9 @@ describe('File', () => {
       it('should allow a string with leading slash.', async done => {
         const newFileName = '/new-file-name.png';
         const newFile = new File(BUCKET, newFileName);
-        const expectedPath = `/b/${BUCKET.id}/o/${file.id}/moveTo/o/${encodeURIComponent(newFile.name)}`;
+        const expectedPath = `/b/${BUCKET.id}/o/${
+          file.id
+        }/moveTo/o/${encodeURIComponent(newFile.name)}`;
         assertPathEquals(file, expectedPath, done);
         await file.moveFileAtomic(newFileName);
       });
@@ -4128,7 +4146,9 @@ describe('File', () => {
         .callsFake((reqOpts, callback_) => {
           assert.deepStrictEqual(reqOpts, {
             method: 'POST',
-            url: `/b/${file.bucket.name}/o/${encodeURIComponent(file.name)}/restore`,
+            url: `/b/${file.bucket.name}/o/${encodeURIComponent(
+              file.name,
+            )}/restore`,
             queryParameters: {generation: 123},
           });
           assert.strictEqual(callback_, undefined);
