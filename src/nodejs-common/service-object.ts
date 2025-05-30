@@ -312,15 +312,11 @@ class ServiceObject<T, K extends BaseMetadata> extends EventEmitter {
             ...options,
           },
         },
-        (err, _data, respo) => {
-          let resp: GaxiosResponse | undefined = respo;
-          if (err) {
-            if (err.status === 404 && ignoreNotFound) {
-              err = null;
-              resp = undefined;
-            }
+        (err, _, resp) => {
+          if (err && err.status === 404 && ignoreNotFound) {
+            err = null;
           }
-          callback!(err, resp);
+          callback(err, resp);
         },
       )
       .catch(({err, resp}) => {
@@ -453,7 +449,7 @@ class ServiceObject<T, K extends BaseMetadata> extends EventEmitter {
 
     let url = `${this.baseUrl}/${this.id}`;
     if (this.parent instanceof Bucket) {
-      url = `${this.parent.baseUrl}/${this.parent.id}/${url}`;
+      url = `${this.parent.baseUrl}/${this.parent.id}${url}`;
     }
 
     this.storageTransport
@@ -511,7 +507,7 @@ class ServiceObject<T, K extends BaseMetadata> extends EventEmitter {
 
     let url = `${this.baseUrl}/${this.name}`;
     if (this.parent instanceof Bucket) {
-      url = `${this.parent.baseUrl}/${this.parent.name}/${url}`;
+      url = `${this.parent.baseUrl}/${this.parent.name}${url}`;
     }
 
     const body = Object.assign({}, methodConfig.reqOpts?.body, metadata);
