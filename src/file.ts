@@ -1584,12 +1584,10 @@ class File extends ServiceObject<File, FileMetadata> {
     ) => {
       if (err) {
         // Get error message from the body.
-        await this.getBufferFromReadable(rawResponseStream as Readable).then(
-          body => {
-            err.message = body.toString('utf8');
-            throughStream.destroy(err);
-          },
-        );
+        await this.getBufferFromReadable(rawResponseStream).then(body => {
+          err.message = body.toString('utf8');
+          throughStream.destroy(err);
+        });
 
         return;
       }
@@ -1699,11 +1697,12 @@ class File extends ServiceObject<File, FileMetadata> {
 
       this.storageTransport
         .makeRequest(reqOpts, async (err, stream, rawResponse) => {
-          (stream as Readable).on('error', err => {
+          const readable = Readable.from(stream as ReadableStream);
+          readable.on('error', err => {
             throughStream.destroy(err);
           });
           throughStream.emit('response', rawResponse);
-          await onResponse(err, rawResponse!, stream as Readable);
+          await onResponse(err, rawResponse!, readable);
         })
         .catch(err => throughStream.destroy(err));
     };
